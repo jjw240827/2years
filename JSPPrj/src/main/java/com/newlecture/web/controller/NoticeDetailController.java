@@ -8,6 +8,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import com.newlecture.web.entity.Notice;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -34,12 +36,22 @@ public class NoticeDetailController extends HttpServlet{
 
 			rs.next();
 			String title = rs.getString("TITLE");
-			String writerId = rs.getString("REGDATE");
-			Date regdate = rs.getDate("WRITER_ID");
+			String writerId = rs.getString("WRITER_ID");
+			Date regdate = rs.getDate("REGDATE");
 			String hit = rs.getString("HIT");
 			String files = rs.getString("FILES");
 			String content = rs.getString("CONTENT");
 			
+			Notice notice = new Notice(
+					id,
+					title,
+					writerId,
+					regdate,
+					hit,
+					files,
+					content);
+			request.setAttribute("n", notice);
+			/*
 			// request는 저장소의 역할로도 사용 가능하다
 			request.setAttribute("title", title);
 			request.setAttribute("writerId", writerId);
@@ -47,7 +59,7 @@ public class NoticeDetailController extends HttpServlet{
 			request.setAttribute("hit", hit);
 			request.setAttribute("files", files);
 			request.setAttribute("content", content);
-			
+			*/
 			// 이 변수가 model
 			rs.close();
 			st.close();

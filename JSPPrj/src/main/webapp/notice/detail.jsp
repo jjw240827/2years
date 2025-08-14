@@ -1,11 +1,13 @@
-
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"  isELIgnored="false"%>
 
 <!DOCTYPE html>
 <html>
 
 <head>
+	<meta charset="UTF-8">
     <title>코딩 전문가를 만들기 위한 온라인 강의 시스템</title>
-    <meta charset="UTF-8">
+    
     <title>공지사항목록</title>
     
     <link href="/css/customer/layout.css" type="text/css" rel="stylesheet" />
@@ -149,25 +151,25 @@
 							<tbody>
 								<tr>
 									<th>제목</th>
-									<td class="text-align-left text-indent text-strong text-orange" colspan="3"><%=request.getAttribute("title") %></td>
+									<td class="text-align-left text-indent text-strong text-orange" colspan="3">${n.title}</td>
 								</tr>
 								<tr>
 									<th>작성일</th>
-									<td class="text-align-left text-indent" colspan="3"><%=request.getAttribute("regdate") %></td>
+									<td class="text-align-left text-indent" colspan="3">${n.regdate}</td>
 								</tr>
 								<tr>
 								
 									<th>작성자</th>
-									<td><%=request.getAttribute("writerId") %></td>
+									<td>${n.writerId}</td>
 									<th>조회수</th>
-									<td><%=request.getAttribute("hit") %></td>
+									<td>${n.hit}</td>
 								</tr>
 								<tr>
 									<th>첨부파일</th>
-									<td colspan="3"><%=request.getAttribute("files") %></td>
+									<td colspan="3">${n.files}</td>
 								</tr>
 								<tr class="content">
-									<td colspan="4"><%=request.getAttribute("content") %></td>
+									<td colspan="4">${n.content}</td>
 								</tr>
 							</tbody>
 						</table>
