@@ -1,3 +1,6 @@
+<%@page import="java.util.List"%>
+<%@page import="com.newlecture.web.entity.Notice"%>
+<%@page import="java.sql.Date"%>
 <%@page import="java.sql.ResultSet"%>
 <%@page import="java.sql.Statement"%>
 <%@page import="java.sql.DriverManager"%>
@@ -13,6 +16,30 @@ Class.forName("oracle.jdbc.driver.OracleDriver");
 Connection con = DriverManager.getConnection(url, "newlec", "6164");
 Statement st = con.createStatement();
 ResultSet rs = st.executeQuery(sql);
+
+while(rs.next()){
+	int id = rs.getInt("ID");
+	String title = rs.getString("TITLE");
+	String writerId = rs.getString("WRITER_ID");
+	Date regdate = rs.getDate("REGDATE");
+	String hit = rs.getString("HIT");
+	String files = rs.getString("FILES");
+	String content = rs.getString("CONTENT");
+
+
+Notice notice = new Notice(
+		id,
+		title,
+		writerId,
+		regdate,
+		hit,
+		files,
+		content);
+}
+rs.close();
+st.close();
+con.close();
+	
 %>    
 <!DOCTYPE html>
 <html>
@@ -187,15 +214,21 @@ ResultSet rs = st.executeQuery(sql);
 					</thead>
 					<tbody>
 					
-					<% while(rs.next()){%>
+					<%
+					List<Notice> list = (List<Notice>)request.getAttribute("list");
+					for(Notice n : list){ 
+						// n.writerId처럼 사용할 수 없다. el에서 사용하는 키워드는 저장소에 담겨져 있는 키워드이다.
+						// 저장소에 n이라는 키워드를 가지고 있는 값이 있어야 사용 가능하다. n.writerId를 사용하기 위해서 방금 꺼내온 것처럼
+						// 이번에는 집어넣어야한다.(우리는 4대 저장소 중 page에 담을 것이다.)
+						pageContext.setAttribute("n", n);
+						%>
 	  				<tr>
-						<td><%= rs.getInt("ID")%></td>
-						<td class="title indent text-align-left"><a href="detail?id=<%= rs.getInt("ID")%>"><%=rs.getString("TITLE") %></a></td>
-						<td><%=rs.getString("WRITER_ID") %></td>
-						<td>
-							<%=rs.getDate("REGDATE") %>	
+						<td>${n.id}</td>
+						<td class="title indent text-align-left"><a href="detail?id=${n.id}"></a>${n.title}</td>
+						<td>${n.writerId}</td>
+						<td>${n.regdate}	
 						</td>
-						<td><%=rs.getInt("HIT") %></td>
+						<td>${n.hit}</td>
 					</tr>
 	  				<%} %>
 					
@@ -272,8 +305,3 @@ ResultSet rs = st.executeQuery(sql);
     </body>
     
     </html>
-    <% 
-    rs.close();
-		st.close();
-		con.close();
-		%>
