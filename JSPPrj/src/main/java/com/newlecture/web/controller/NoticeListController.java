@@ -37,7 +37,7 @@ public class NoticeListController extends HttpServlet{
 
 			while(rs.next()) {
 			
-			Int id = rs.getInt("ID");
+			Integer id = rs.getInt("ID");
 			String title = rs.getString("TITLE");
 			String writerId = rs.getString("WRITER_ID");
 			Date regdate = rs.getDate("REGDATE");
@@ -67,9 +67,11 @@ public class NoticeListController extends HttpServlet{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		request.setAttribute("list",list);
+		
+		request.getRequestDispatcher("/WEB-INF/view/notice/list2.jsp")
+		.forward(request, response);
 		
 }
-	request.setAttribute("list",list);
 	
-	request.getRequestDispatcher("/notice/list.jsp").forward(request, response);
-}
+	}

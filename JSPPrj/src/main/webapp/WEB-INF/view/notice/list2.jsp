@@ -7,40 +7,10 @@
 <%@page import="java.sql.Connection"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"  isELIgnored="false"%>
-    
-<%
-String url = "jdbc:oracle:thin:@localhost:1522/xepdb1";
-String sql = "select * FROM NOTICE";
-
-Class.forName("oracle.jdbc.driver.OracleDriver");
-Connection con = DriverManager.getConnection(url, "newlec", "6164");
-Statement st = con.createStatement();
-ResultSet rs = st.executeQuery(sql);
-
-while(rs.next()){
-	int id = rs.getInt("ID");
-	String title = rs.getString("TITLE");
-	String writerId = rs.getString("WRITER_ID");
-	Date regdate = rs.getDate("REGDATE");
-	String hit = rs.getString("HIT");
-	String files = rs.getString("FILES");
-	String content = rs.getString("CONTENT");
-
-
-Notice notice = new Notice(
-		id,
-		title,
-		writerId,
-		regdate,
-		hit,
-		files,
-		content);
-}
-rs.close();
-st.close();
-con.close();
-	
-%>    
+   
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri = "http://java.sun.com/jsp/jstl/fmt"%>
+ 
 <!DOCTYPE html>
 <html>
 
@@ -211,26 +181,28 @@ con.close();
 							<th class="w100">작성일</th>
 							<th class="w60">조회수</th> 
 						</tr>
-					</thead>
+					</thead> 
 					<tbody>
 					
-					<%
+					<%-- 	<%
 					List<Notice> list = (List<Notice>)request.getAttribute("list");
 					for(Notice n : list){ 
 						// n.writerId처럼 사용할 수 없다. el에서 사용하는 키워드는 저장소에 담겨져 있는 키워드이다.
 						// 저장소에 n이라는 키워드를 가지고 있는 값이 있어야 사용 가능하다. n.writerId를 사용하기 위해서 방금 꺼내온 것처럼
 						// 이번에는 집어넣어야한다.(우리는 4대 저장소 중 page에 담을 것이다.)
 						pageContext.setAttribute("n", n);
-						%>
+						%> --%>
+						
+					<c:forEach var="n" items="${list}">
 	  				<tr>
 						<td>${n.id}</td>
-						<td class="title indent text-align-left"><a href="detail?id=${n.id}"></a>${n.title}</td>
+						<td class="title indent text-align-left"><a href="detail?id=${n.id}">${n.title}</a></td>
 						<td>${n.writerId}</td>
-						<td>${n.regdate}	
-						</td>
+						<td><fmt:formatDate pattern="yyyy-MM-dd" value="${n.regdate}"/></td>
 						<td>${n.hit}</td>
 					</tr>
-	  				<%} %>
+					</c:forEach>
+	  				<%--<%} --%>
 					
 					
 					</tbody>
@@ -244,21 +216,34 @@ con.close();
 
 			<div class="margin-top align-center pager">	
 		
+	<c:set var="page" value="${(param.p==null)?1:param.p}"/>
+	<c:set var="startNum" value="${page-(page-1)%5}"/> 
+	<c:set var="lastNum" value="23"/>
+	
 	<div>
-		
-		
+		<c:if test="${startNum>1}">
+		<a class="btn btn-prev" href="?p=${startNum-1}&t=&q=">이전</a>
+		</c:if>
+		<c:if test="${startNum<=1}">
 		<span class="btn btn-prev" onclick="alert('이전 페이지가 없습니다.');">이전</span>
-		
+		</c:if>
 	</div>
+	
+	
+	
 	<ul class="-list- center">
-		<li><a class="-text- orange bold" href="?p=1&t=&q=" >1</a></li>
-				
+		<c:forEach var="i" begin="0" end="4">
+		<li><a class="-text- orange bold" href="?p=${startNum+i}&t=&q=" >${startNum+i}</a></li>
+		</c:forEach> 	
 	</ul>
 	<div>
-		
-		
+		<!-- i에서 가장 큰 수는 4이지만 우리는 그 다음페이지를 원하기 때문에 5를 넣어준다. -->
+			<c:if test="${startNum+5<lastNum}"> 
+				<a href="?p=${startNum+5}&t=&q=" class="btn btn-next">다음</a>
+			</c:if>
+			<c:if test="${startNum+5>=lastNum}">
 			<span class="btn btn-next" onclick="alert('다음 페이지가 없습니다.');">다음</span>
-		
+			</c:if>
 	</div>
 	
 			</div>
