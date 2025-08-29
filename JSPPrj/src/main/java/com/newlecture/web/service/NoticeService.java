@@ -11,23 +11,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.newlecture.web.entity.Notice;
+import com.newlecture.web.entity.NoticeView;
 
 public class NoticeService {
-	public List<Notice> getNoticeList() {
+	public List<NoticeView> getNoticeList() {
 		
 		return getNoticeList("title", "", 1); 
 	}
 	
-public List<Notice> getNoticeList(int page) {
+public List<NoticeView> getNoticeList(int page) {
 		
 		return getNoticeList("title", "", page); 
 	}
 
-public List<Notice> getNoticeList(String field/*TITLE, WRITER_ID*/, String query, int page) {
-	List<Notice> list = new ArrayList<>();
+public List<NoticeView> getNoticeList(String field/*TITLE, WRITER_ID*/, String query, int page) {
+	List<NoticeView> list = new ArrayList<>();
 	String sql = "SELECT * FROM(" +
 			" 	SELECT ROWNUM NUM, N.* " +
-			"	FROM (SELECT * FROM NOTICE WHERE "+field+" LIKE ? ORDER BY  REGDATE DESC) N" +
+			"	FROM (SELECT * FROM NOTICE_VIEW WHERE "+field+" LIKE ? ORDER BY  REGDATE DESC) N" +
 			") " +
 			"WHERE NUM BETWEEN ? AND ?";
 	// 1, 11, 21, 31 -> an = a1+(n-1)*10  >> 1 + (page-1)*10 >> ?를 사용하던지 "+ +"를 사용하던지 2가지 방법이 존재
@@ -52,16 +53,18 @@ public List<Notice> getNoticeList(String field/*TITLE, WRITER_ID*/, String query
 		Date regdate = rs.getDate("REGDATE");
 		String hit = rs.getString("HIT");
 		String files = rs.getString("FILES");
-		String content = rs.getString("CONTENT");
+	// 	String content = rs.getString("CONTENT");
+		int cmtCount = rs.getInt("CNT_COUNT");
 		
-		Notice notice = new Notice(
+		NoticeView notice = new NoticeView(
 				id,
 				title,
 				writerId,
 				regdate,
 				hit,
 				files,
-				content);
+		//		content
+				cmtCount);
 		list.add(notice);
 		}
 		
@@ -93,7 +96,7 @@ public List<Notice> getNoticeList(String field/*TITLE, WRITER_ID*/, String query
 		// COUNT(ID)로 ID의 수를 가져온다. 이때 값을 꺼내기 위해서 별칭 COUNT를 주고 COUNT변수로 값을 꺼내온다.
 		String sql = "SELECT COUNT(ID) COUNT FROM(" +
 				" 	SELECT ROWNUM NUM, N.* " +
-				"	FROM (SELECT * FROM NOTICE WHERE "+field+" LIKE ? ORDER BY  REGDATE DESC) N" +
+				"	FROM (SELECT * FROM NOTICE_VIEW WHERE "+field+" LIKE ? ORDER BY  REGDATE DESC) N" +
 				") ";
 		String url = "jdbc:oracle:thin:@localhost:1522/xepdb1";
 		
@@ -106,7 +109,8 @@ public List<Notice> getNoticeList(String field/*TITLE, WRITER_ID*/, String query
 			
 			ResultSet rs = st.executeQuery();
 			
-			count = rs.getInt("count"); // 소문자로 해도 SQL문의 대문자와 같은 취급이 된다.
+			if(rs.next())
+				count = rs.getInt("count"); // 소문자로 해도 SQL문의 대문자와 같은 취급이 된다.
 			
 			rs.close();
 			st.close();
