@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
+
+    <mvc:annotation-driven></mvc:annotation-driven>
+    <!-- spring mvc 설정을 어노테이션 기반으로 처리하겠다는 의미와 스프링 mvc의 여러 객체들을 자동으로 스프링의 빈으로 등록하게 하는 기능 -->
+
+    <mvc:resources mapping="/resources/**" location="/resources/"></mvc:resources>
+	<!-- 이미지나 html 파일과 같이 정적인 파일의 경로를 지정. 만약 /resource 경로로 들어오는 요청들은 web mvc가 처리하지 않는 기능. -->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/views/"></property>
+        <property name="suffix" value=".jsp"></property>
+    </bean>
+ 	<!-- InternalResourceViewResolver 클래스의 빈을 만들어서 스프링 mvc에서 제공하는 view를 어떻게 결정하는지에 대한 설정을 담당한다. -->
+    <context:component-scan base-package="org.zerock.springex.controller"/>
+	
+   <!--  <bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+        <property name="formatters">
+            <set>
+                <bean class="org.zerock.springex.controller.formatter.LocalDateFormatter"/>
+                <bean class="org.zerock.springex.controller.formatter.CheckboxFormatter"/>
+            </set>
+        </property>
+    </bean>
+ 
+    <mvc:annotation-driven  conversion-service="conversionService" />-->
+     <!-- frontController는 내프로젝트의 상황을 모르기 때문에 servlet-content에 설명을 적어주는 것이다. 요청을 어디에 전달할 것인가?
+      <context:component-scan base-package="org.zerock.springex.controller"/>여기에
+      컨트롤러가 home에 반환하라고 하면? 
+      InternalResourceViewResolver 객체에 있는대로 이름 똑가티 .jsp만 붙여서 view아래를 살펴본다. -->   
+      
+       <bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+        <property name="formatters"> <!-- 직접 만든 커스텀 포멧터를 추가 -->
+            <set>
+                <bean class="org.zerock.springex.controller.formatter.LocalDateFormatter"/>
+              
+            </set>
+        </property>
+    </bean>                                 
+    
+    <mvc:annotation-driven  conversion-service="conversionService" />   
+    <!-- 해당 빈을 스프링 mvc 전역 설정에 주입 -->
+</beans>
