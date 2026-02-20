@@ -4,8 +4,8 @@
        xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
 
-    <mvc:annotation-driven></mvc:annotation-driven>
-    <!-- spring mvc 설정을 어노테이션 기반으로 처리하겠다는 의미와 스프링 mvc의 여러 객체들을 자동으로 스프링의 빈으로 등록하게 하는 기능 -->
+    <!--  <mvc:annotation-driven></mvc:annotation-driven>
+   spring mvc 설정을 어노테이션 기반으로 처리하겠다는 의미와 스프링 mvc의 여러 객체들을 자동으로 스프링의 빈으로 등록하게 하는 기능 -->
 
     <mvc:resources mapping="/resources/**" location="/resources/"></mvc:resources>
 	<!-- 이미지나 html 파일과 같이 정적인 파일의 경로를 지정. 만약 /resource 경로로 들어오는 요청들은 web mvc가 처리하지 않는 기능. -->
@@ -35,7 +35,7 @@
         <property name="formatters"> <!-- 직접 만든 커스텀 포멧터를 추가 -->
             <set>
                 <bean class="org.zerock.springex.controller.formatter.LocalDateFormatter"/>
-              
+              	<bean class="org.zerock.springex.controller.formatter.CheckboxFormatter"/>
             </set>
         </property>
     </bean>                                 

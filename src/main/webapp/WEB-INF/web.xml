@@ -40,6 +40,20 @@
 	controller인 dispatcherServlet이 존재하기 때문이다.
 	또한 자바코드로 만들면 컨트롤러 경로등이 바뀔 때마다 다시 컴파일을 해야하지만 설정파일은 그럴 필요가 없다.
 	비지니스 로직만 우리가 직접 만들고 관리자 역할인 frontcontroller은 가져다 쓴다. -->
+	
+	 <filter>
+        <filter-name>encoding</filter-name> <!-- filter이름 -->
+        <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+        <init-param>
+            <param-name>encoding</param-name> <!-- filter의 파라미터 이름 -->
+            <param-value>UTF-8</param-value>
+        </init-param>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>encoding</filter-name> <!-- 사용하는 필터 -->
+        <servlet-name>appServlet</servlet-name> <!-- 적용하는 servlet -->
+    </filter-mapping>
   
 
 </web-app>
