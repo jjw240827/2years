@@ -101,12 +101,12 @@
                         },false);
                         document.querySelector(".btn-secondary").addEventListener("click",function(e) {
 
-                        e.preventDefault()
-                        e.stopPropagation()
+                            e.preventDefault()
+                            e.stopPropagation()
 
-                        self.location = "/todo/list";
+                            self.location= `/todo/list?${pageRequestDTO.link}`
 
-                    },false);
+                        },false);
                         </script>
                       
 </body>

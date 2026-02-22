@@ -36,13 +36,16 @@ public class PageResponseDTO<E> {
         this.dtoList = dtoList;
 
         this.end =   (int)(Math.ceil(this.page / 10.0 )) *  10;
+        // 올림
 
         this.start = this.end - 9;
 
         int last =  (int)(Math.ceil((total/(double)size)));
-
+        // 마지막 페이지
         this.end =  end > last ? last: end;
-
+        // 만약 데이터의수는 103 page는 11페이지를 보고 있다면 end, 즉 마지막 페이지는 20이다.
+        // 그렇다면 우리는 존재하지도 않는 12~20페이지를 보여줘야하니 이 수식을 써서 마지막 페이지 묶음일 때는 최대 페이지로 end를 쓴다.
+        
         this.prev = this.start > 1;
 
         this.next =  total > this.end * this.size;

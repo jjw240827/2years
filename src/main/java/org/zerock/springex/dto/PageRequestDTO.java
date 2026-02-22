@@ -29,13 +29,23 @@ public class PageRequestDTO {
     @Positive
     private int size = 10;
 
- 
+    private String link;
 
     public int getSkip(){
 
         return (page -1) * 10; // 만약 사용자가 2페이지를 보고 싶다면 10개를 건너뛴다.
     }
+    public String getLink() {
+      if(link == null){
+          StringBuilder builder = new StringBuilder();
 
+          builder.append("page=" + this.page);
+
+          builder.append("&size=" + this.size);
+          link = builder.toString();
+      }
+      return link;
+  }
 
 
 }
